@@ -1093,34 +1093,48 @@ class KUBE:
             messagebox.showerror("Error", "No utensils to edit")
             return
         
-        dialog = self.create_dialog("Edit Utensil", 450, 350)
+        dialog = self.create_dialog("Edit Utensil", 550, 500)
         main_frame = tk.Frame(dialog, bg=self.colors["white"])
         main_frame.pack(fill="both", expand=True, padx=20, pady=20)
         
-        tk.Label(main_frame, text="Edit Utensil", font=("Arial", 16, "bold"), 
+        tk.Label(main_frame, text="Edit Utensil", font=("Arial", 18, "bold"), 
                 bg=self.colors["white"], fg=self.colors["dark"]).pack(pady=20)
         
-        form_frame = tk.Frame(main_frame, bg=self.colors["white"])
-        form_frame.pack(fill="x", pady=10)
+        # Create a content frame with scrollbar for better organization
+        content_frame = tk.Frame(main_frame, bg=self.colors["white"])
+        content_frame.pack(fill="both", expand=True, padx=10, pady=10)
         
-        tk.Label(form_frame, text="Select Utensil:", font=("Arial", 11), bg=self.colors["white"]).grid(row=0, column=0, padx=10, pady=15, sticky="e")
+        canvas = tk.Canvas(content_frame, bg=self.colors["white"], highlightthickness=0)
+        canvas.pack(side="left", fill="both", expand=True)
+        
+        scrollbar = ttk.Scrollbar(content_frame, command=canvas.yview)
+        scrollbar.pack(side="right", fill="y")
+        canvas.config(yscrollcommand=scrollbar.set)
+        
+        form_frame = tk.Frame(canvas, bg=self.colors["white"])
+        canvas.create_window((0, 0), window=form_frame, anchor="nw")
+        
+        form_frame.bind("<Configure>", lambda e: canvas.config(scrollregion=canvas.bbox("all")))
+        
+        # Form fields with better styling
+        tk.Label(form_frame, text="Select Utensil:", font=("Arial", 11, "bold"), bg=self.colors["white"]).grid(row=0, column=0, padx=15, pady=20, sticky="e")
         utensil_names = [u["name"] for u in self.utensils]
         selected_utensil_var = tk.StringVar(value=utensil_names[0] if utensil_names else "")
         utensil_combo = ttk.Combobox(form_frame, textvariable=selected_utensil_var, values=utensil_names, 
-                                    font=("Arial", 11), width=23, state="readonly")
-        utensil_combo.grid(row=0, column=1, padx=10, pady=15)
+                                    font=("Arial", 11), width=30, state="readonly")
+        utensil_combo.grid(row=0, column=1, padx=15, pady=20)
         
-        tk.Label(form_frame, text="New Name:", font=("Arial", 11), bg=self.colors["white"]).grid(row=1, column=0, padx=10, pady=15, sticky="e")
-        name_entry = tk.Entry(form_frame, font=("Arial", 11), width=25)
-        name_entry.grid(row=1, column=1, padx=10, pady=15)
+        tk.Label(form_frame, text="New Name:", font=("Arial", 11, "bold"), bg=self.colors["white"]).grid(row=1, column=0, padx=15, pady=20, sticky="e")
+        name_entry = tk.Entry(form_frame, font=("Arial", 11), width=30)
+        name_entry.grid(row=1, column=1, padx=15, pady=20)
         
-        tk.Label(form_frame, text="Category:", font=("Arial", 11), bg=self.colors["white"]).grid(row=2, column=0, padx=10, pady=15, sticky="e")
-        category_entry = tk.Entry(form_frame, font=("Arial", 11), width=25)
-        category_entry.grid(row=2, column=1, padx=10, pady=15)
+        tk.Label(form_frame, text="Category:", font=("Arial", 11, "bold"), bg=self.colors["white"]).grid(row=2, column=0, padx=15, pady=20, sticky="e")
+        category_entry = tk.Entry(form_frame, font=("Arial", 11), width=30)
+        category_entry.grid(row=2, column=1, padx=15, pady=20)
         
-        tk.Label(form_frame, text="Total Quantity:", font=("Arial", 11), bg=self.colors["white"]).grid(row=3, column=0, padx=10, pady=15, sticky="e")
+        tk.Label(form_frame, text="Total Quantity:", font=("Arial", 11, "bold"), bg=self.colors["white"]).grid(row=3, column=0, padx=15, pady=20, sticky="e")
         qty_var = tk.IntVar(value=1)
-        tk.Spinbox(form_frame, from_=1, to=100, textvariable=qty_var, font=("Arial", 11), width=23).grid(row=3, column=1, padx=10, pady=15)
+        tk.Spinbox(form_frame, from_=1, to=100, textvariable=qty_var, font=("Arial", 11), width=28).grid(row=3, column=1, padx=15, pady=20)
         
         def load_utensil_data(event=None):
             selected_name = selected_utensil_var.get()
@@ -1169,10 +1183,10 @@ class KUBE:
             self.show_equipment_content()
         
         button_frame = tk.Frame(main_frame, bg=self.colors["white"])
-        button_frame.pack(pady=20)
+        button_frame.pack(pady=20, fill="x", side="bottom")
         
-        self.create_button(button_frame, "Update", edit, self.colors["warning"])
-        self.create_button(button_frame, "Cancel", dialog.destroy, self.colors["dark"])
+        self.create_button(button_frame, "✓ Update", edit, self.colors["warning"])
+        self.create_button(button_frame, "✕ Cancel", dialog.destroy, self.colors["dark"])
     
     def show_delete_utensil_dialog(self):
         """Show dialog to delete utensil"""
