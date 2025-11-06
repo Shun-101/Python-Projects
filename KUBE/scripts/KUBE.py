@@ -419,6 +419,7 @@ class KUBE:
             ("🔍 Search Borrowings", lambda: self.show_search_content(), self.colors["secondary"]),
             ("⚙️ Manage Equipment", lambda: self.show_equipment_content(), self.colors["dark"]),
             ("⚙️ System Settings", lambda: self.show_settings_content(), self.colors["dark"]),
+            ("ℹ️ About KUBE", lambda: self.show_about_content(), "#1abc9c"),
         ]
         
         for text, command, color in sidebar_buttons:
@@ -463,7 +464,7 @@ class KUBE:
             tk.Label(card, text=label, font=("Arial", 12), bg=self.colors["white"], fg="#7f8c8d").pack(pady=(0, 20))
         
         activity_frame = tk.LabelFrame(self.main_content, text="Recent Activity", font=("Arial", 13, "bold"), 
-                                      bg=self.colors["white"], fg=self.colors["dark"], relief="flat", bd=0)
+                                      bg=self.colors["white"], relief="flat", bd=0)
         activity_frame.pack(fill="both", expand=True, padx=30, pady=10)
         
         tree_frame = tk.Frame(activity_frame, bg=self.colors["white"])
@@ -1404,6 +1405,116 @@ class KUBE:
         
         self.create_button(button_frame, "Change", change, self.colors["success"])
         self.create_button(button_frame, "Cancel", dialog.destroy, self.colors["dark"])
+
+    def show_about_content(self):
+        """About KUBE page with team information"""
+        for widget in self.main_content.winfo_children():
+            widget.destroy()
+        
+        scroll_frame = tk.Frame(self.main_content, bg=self.colors["bg"])
+        scroll_frame.pack(fill="both", expand=True, padx=0, pady=0)
+        
+        canvas = tk.Canvas(scroll_frame, bg=self.colors["bg"], highlightthickness=0)
+        canvas.pack(side="left", fill="both", expand=True)
+        
+        scrollbar = ttk.Scrollbar(scroll_frame, command=canvas.yview)
+        scrollbar.pack(side="right", fill="y")
+        canvas.config(yscrollcommand=scrollbar.set)
+        
+        content_frame = tk.Frame(canvas, bg=self.colors["bg"])
+        canvas.create_window((0, 0), window=content_frame, anchor="nw")
+        
+        # Header section
+        header_frame = tk.Frame(content_frame, bg=self.colors["bg"])
+        header_frame.pack(fill="x", padx=30, pady=40)
+        
+        tk.Label(header_frame, text="About KUBE", font=("Arial", 32, "bold"), 
+                bg=self.colors["bg"], fg=self.colors["dark"]).pack(anchor="w", pady=(0, 10))
+        
+        tk.Label(header_frame, text="Kitchen Utensil Borrowing Engine", font=("Arial", 14), 
+                bg=self.colors["bg"], fg="#7f8c8d").pack(anchor="w")
+        
+        tk.Label(header_frame, 
+                text="KUBE is an efficient system designed to streamline kitchen utensil borrowing and management. Built with a focus on simplicity and reliability, KUBE enables seamless tracking of equipment, borrower information, and transaction history.",
+                font=("Arial", 11), bg=self.colors["bg"], fg="#555", wraplength=800, justify="left").pack(anchor="w", pady=(20, 0))
+        
+        # Features section
+        features_frame = tk.LabelFrame(content_frame, text="Key Features", font=("Arial", 14, "bold"), 
+                                      bg=self.colors["white"], relief="flat", bd=0)
+        features_frame.pack(fill="x", padx=30, pady=20)
+        
+        features = [
+            "✓ Easy-to-use admin interface for managing utensils",
+            "✓ Real-time inventory tracking and availability",
+            "✓ Borrower credit score system for accountability",
+            "✓ Complete transaction history and reporting",
+            "✓ Support for multiple items and partial returns",
+            "✓ Overdue tracking and alerts",
+            "✓ CSV export for record-keeping",
+            "✓ Secure password-protected access"
+        ]
+        
+        for feature in features:
+            tk.Label(features_frame, text=feature, font=("Arial", 11), bg=self.colors["white"], fg="#333").pack(anchor="w", padx=20, pady=8)
+        
+        # Team section
+        team_frame = tk.LabelFrame(content_frame, text="Development Team", font=("Arial", 14, "bold"), 
+                                  bg=self.colors["white"], relief="flat", bd=0)
+        team_frame.pack(fill="both", expand=True, padx=30, pady=20)
+        
+        # Leader
+        leader_card = tk.Frame(team_frame, bg="#f0f4f8", relief="raised", bd=1)
+        leader_card.pack(fill="x", padx=15, pady=15)
+        
+        tk.Label(leader_card, text="👨‍💼 Project Leader", font=("Arial", 11, "bold"), 
+                bg="#f0f4f8", fg=self.colors["primary"]).pack(anchor="w", padx=20, pady=(15, 5))
+        tk.Label(leader_card, text="Prince Harold Cablayan", font=("Arial", 13, "bold"), 
+                bg="#f0f4f8", fg=self.colors["dark"]).pack(anchor="w", padx=20, pady=0)
+        tk.Label(leader_card, text="Lead Developer & Project Manager", font=("Arial", 10), 
+                bg="#f0f4f8", fg="#7f8c8d").pack(anchor="w", padx=20, pady=(0, 15))
+        
+        # Team Members
+        members_card = tk.Frame(team_frame, bg="#f9fafb", relief="raised", bd=1)
+        members_card.pack(fill="x", padx=15, pady=15)
+        
+        tk.Label(members_card, text="👥 Development Team Members", font=("Arial", 11, "bold"), 
+                bg="#f9fafb", fg=self.colors["info"]).pack(anchor="w", padx=20, pady=(15, 10))
+        
+        members = [
+            "Cydrix Bajenting",
+            "Melbert Cola",
+            "Jethyl Orijuela",
+            "Crislaine Cabelin",
+            "Jaira Mae Morato"
+        ]
+        
+        for member in members:
+            tk.Label(members_card, text=f"• {member}", font=("Arial", 11), 
+                    bg="#f9fafb", fg="#333").pack(anchor="w", padx=40, pady=4)
+        
+        tk.Label(members_card, text="", bg="#f9fafb").pack(pady=10)
+        
+        # Version and info
+        info_frame = tk.Frame(content_frame, bg=self.colors["white"])
+        info_frame.pack(fill="x", padx=30, pady=30)
+        
+        tk.Label(info_frame, text="Version", font=("Arial", 11, "bold"), 
+                bg=self.colors["white"], fg=self.colors["dark"]).pack(anchor="w")
+        tk.Label(info_frame, text="KUBE v1.0.0", font=("Arial", 11), 
+                bg=self.colors["white"], fg="#7f8c8d").pack(anchor="w", pady=(0, 20))
+        
+        tk.Label(info_frame, text="Release Date", font=("Arial", 11, "bold"), 
+                bg=self.colors["white"], fg=self.colors["dark"]).pack(anchor="w")
+        tk.Label(info_frame, text=f"{datetime.now().strftime('%B %Y')}", font=("Arial", 11), 
+                bg=self.colors["white"], fg="#7f8c8d").pack(anchor="w", pady=(0, 20))
+        
+        tk.Label(info_frame, text="System Type", font=("Arial", 11, "bold"), 
+                bg=self.colors["white"], fg=self.colors["dark"]).pack(anchor="w")
+        tk.Label(info_frame, text="Local Desktop Application", font=("Arial", 11), 
+                bg=self.colors["white"], fg="#7f8c8d").pack(anchor="w", pady=(0, 20))
+        
+        content_frame.update_idletasks()
+        canvas.config(scrollregion=canvas.bbox("all"))
 
 if __name__ == "__main__":
     root = tk.Tk()
